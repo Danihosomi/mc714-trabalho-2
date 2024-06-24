@@ -33,6 +33,7 @@ class Device:
         while True:
             time.sleep(1)
             message.MSG_COUNTER += 1
+            self.timestamp +=1
             msg = message.Message(message.MSG_COUNTER+1, self.id, "receba", "MENSAGEM", self.timestamp)
             result = self.client.publish(util.TOPIC, msg)
             status = result[0]
@@ -45,8 +46,9 @@ class Device:
     def subscribe(self):
         def on_message(client, userdata, msg):
             if msg.receiver == self.id:
+                self.timestamp = max(self.timestamp, msg.timestamp+1)
                 print(f"Received `{msg.payload.decode()}` from `{msg.topic}` topic")
-            
+
         self.client.subscribe(util.TOPIC)
         self.client.on_message = on_message
 
