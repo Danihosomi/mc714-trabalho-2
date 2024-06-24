@@ -1,4 +1,1 @@
-grpcio==1.50.0
-grpcio-tools==1.50.0
-protobuf==4.21.9
-six==1.16.0
+"paho-mqtt<2.0.0"
