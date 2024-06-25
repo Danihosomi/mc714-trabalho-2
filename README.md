@@ -1,6 +1,19 @@
-# mc714-trabalho-2
+# MC714 - Sistemas Distribuidos - Trabalho 2
 
-## References
+Grupo:
+
+Daniel Yuji Hosomi &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;- 248255
+
+Lucas Francisco Silva Paiva &nbsp; - 248390
+
+## Sobre o Projeto:
+
+
+## Vídeo do Projeto:
+
+
+
+## Referências
 
  - [Lamport Clock](https://www.geeksforgeeks.org/lamports-logical-clock/)
 
