@@ -48,6 +48,7 @@ class Device: ### represents a device in the network
             if MSG.receiver == self.id:
                 self.timestamp = max(self.timestamp, MSG.timestamp+1)
                 print(f"{MSG.receiver} received a message from {MSG.sender}")
+                print(f"{self.id} timestamp is {self.timestamp}")
                 time.sleep(1 + random.randint(0,3))
                 if MSG.data== "token":
                     self.set_token()
@@ -56,7 +57,9 @@ class Device: ### represents a device in the network
                     self.leader_id = max(MSG.sender, self.leader_id)
 
             elif MSG.receiver == "all":
+                self.timestamp = max(self.timestamp, MSG.timestamp+1)
                 print(f"{MSG.receiver} received a message from {MSG.sender}")
+                print(f"{self.id} timestamp is {self.timestamp}")
                 time.sleep(1 + random.randint(0,3))
                 if MSG.data == "election":
                     self.election(MSG.sender)
@@ -95,6 +98,9 @@ def run(device):
         device.set_token()
         device.publish("election", receiver = "all")
     
+    device.publish("hello", receiver = "all")
+    device.publish("hello you", receiver = (device.id + 1) % 5)
+
     device.client.loop_forever()
 
 if __name__ == "__main__":
