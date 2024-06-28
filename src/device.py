@@ -1,5 +1,5 @@
 from paho.mqtt import client as mqtt_client
-import util, time, message, random, sys
+import util, time, message, random
 
 def connect_mqtt(device_id) -> mqtt_client:
 
@@ -16,9 +16,8 @@ def connect_mqtt(device_id) -> mqtt_client:
     return client
 
 class Device: ### represents a device in the network
-    def __init__(self, id, name, status, timestamp):
+    def __init__(self, id, status, timestamp):
         self.id = id
-        self.name = name
         self.status = status
         self.timestamp = timestamp
         self.leader_id = id ### everyone its own leader
@@ -26,33 +25,50 @@ class Device: ### represents a device in the network
         self.client = connect_mqtt(self.id)
 
     def __str__(self):
-        return f"Device(id={self.id}, name={self.name}, status={self.status}, has_token={self.has_token})"
+        return f"Device(id={self.id}, status={self.status}, has_token={self.has_token}, leader_id={self.leader_id}, timestamp={self.timestamp})"
 
-    def publish(self, main_data, receiver = util.DEVICES_COUNTER, pass_token = False, election = False):
+    def publish(self, main_data, receiver = "all"):
         time.sleep(1)
         util.MSG_COUNTER += 1
         self.timestamp +=1
 
-        msg = message.Message(util.MSG_COUNTER+1, self.id, "receba", "MENSAGEM", self.timestamp)
-        result = self.client.publish(util.TOPIC, msg)
+        msg = message.Message(util.MSG_COUNTER+1, self.id, receiver, main_data, self.timestamp)
+        result = self.client.publish(util.TOPIC, msg.__str__())
         status = result[0]
 
         if status == 0:
-            print(f"Send `{msg}` to topic `{util.TOPIC}`")
+            print(f"{msg.sender} sent message with id {msg.id} to device {msg.receiver}")
         else:
-            print(f"Failed to send message to topic {util.TOPIC}")
+            print(f"Failed to send message to device {msg.receiver}")
             
     def subscribe(self):
         def on_message(client, userdata, msg):
             MSG = message.__uncode__(msg.payload.decode())
-            if msg.receiver == self.id:
-                self.timestamp = max(self.timestamp, msg.timestamp+1)
-                print(f"Received `{msg.payload.decode()}` from `{msg.topic}` topic")
 
-            ### Have to handle the message here!
+            if MSG.receiver == self.id:
+                self.timestamp = max(self.timestamp, MSG.timestamp+1)
+                print(f"{MSG.receiver} received a message with id {MSG.id()} from {MSG.sender}")
+                
+                if MSG.data== "token":
+                    self.set_token()
+
+                elif MSG.data == "election_answer":
+                    self.leader_id = max(MSG.sender, self.leader_id)
+
+            elif MSG.receiver == "all":
+                print(f"{MSG.receiver} received a message with id {MSG.id()} from {MSG.sender}")
+                if MSG.data == "election":
+                    self.election(MSG.sender)
 
         self.client.subscribe(util.TOPIC)
         self.client.on_message = on_message
+
+    def election(self, sender_id):
+        if sender_id < self.id:
+            self.publish("election_answer", receiver = sender_id)
+            self.publish("election", receiver = "all")
+        else:
+            self.leader_id = sender_id
 
     def apply_resource(self):
         time.sleep(1 + random.randint(0,3))
@@ -64,20 +80,9 @@ class Device: ### represents a device in the network
 
     def pass_token(self):
         self.has_token = False
-
-        next_device = self.id + 1
-        if next_device > util.DEVICES_COUNTER:
-            next_device = 1
-
-        self.publish("Passing the token", receiver = next_device, pass_token = True)
+        self.publish("token", receiver = (self.id + 1) % util.DEVICES_COUNTER)
 
     def set_token(self):
         self.has_token = True
         self.use_resource()
         self.pass_token()
-
-def run():
-    device = Device()
-
-if __name__ == '__main__':
-    run()
