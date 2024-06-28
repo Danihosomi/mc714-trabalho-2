@@ -36,7 +36,10 @@ class Device: ### represents a device in the network
         status = result[0]
 
         if status == 0:
-            print(f"{msg.sender} sent message with id {msg.id} to device {msg.receiver}")
+            if msg.receiver == "all":
+                print(f"{msg.sender} broadcasted message with id {msg.id}")
+            else:
+                print(f"{msg.sender} sent message with id {msg.id} to device {msg.receiver}")
         else:
             print(f"Failed to send message to device {msg.receiver}")
             
