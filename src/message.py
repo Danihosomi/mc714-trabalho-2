@@ -5,10 +5,10 @@ def __uncode__(msg):
 class Message:
 
     def __init__(self, sender, receiver, data, timestamp):
-        self.sender = sender
+        self.sender = int(sender)
         self.receiver = receiver
         self.data = data ### data can be only a message or can be a leader election message or can be a resource pass message
-        self.timestamp = timestamp
+        self.timestamp = int(timestamp)
 
     def __str__(self):
         return f"{self.sender},{self.receiver},{self.data},{self.timestamp}"
