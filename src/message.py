@@ -1,4 +1,6 @@
-MSG_COUNTER = 0 ### common counter for all messages
+def __uncode__(msg):
+    msg_parts = msg.split(",")
+    return Message(msg_parts[0], msg_parts[1], msg_parts[2], msg_parts[3], msg_parts[4])
 
 class Message:
 
@@ -10,4 +12,4 @@ class Message:
         self.timestamp = timestamp
 
     def __str__(self):
-        return f"Message(id={self.id}, sender={self.sender}, receiver={self.receiver}, data={self.data}, timestamp={self.timestamp})"
+        return f"{self.id},{self.sender},{self.receiver},{self.data},{self.timestamp}"

@@ -2,7 +2,7 @@
 
 ### Grupo:
 
-Daniel Yuji Hosomi &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;- 248255
+Daniel Yuji Hosomi &nbsp; - 248255
 
 Lucas Francisco Silva Paiva &nbsp; - 248390
 
