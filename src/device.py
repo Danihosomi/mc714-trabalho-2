@@ -16,16 +16,15 @@ def connect_mqtt(device_id) -> mqtt_client:
     return client
 
 class Device: ### represents a device in the network
-    def __init__(self, id, status, timestamp):
+    def __init__(self, id):
         self.id = id
-        self.status = status
-        self.timestamp = timestamp
-        self.leader_id = id ### everyone its own leader
+        self.timestamp = 0
+        self.leader_id = id ### everyone starts as its own leader
         self.has_token = False
         self.client = connect_mqtt(self.id)
 
     def __str__(self):
-        return f"Device(id={self.id}, status={self.status}, has_token={self.has_token}, leader_id={self.leader_id}, timestamp={self.timestamp})"
+        return f"Device(id={self.id}, has_token={self.has_token}, leader_id={self.leader_id}, timestamp={self.timestamp})"
 
     def publish(self, main_data, receiver = "all"):
         time.sleep(1)
@@ -48,7 +47,7 @@ class Device: ### represents a device in the network
             if MSG.receiver == self.id:
                 self.timestamp = max(self.timestamp, MSG.timestamp+1)
                 print(f"{MSG.receiver} received a message with id {MSG.id()} from {MSG.sender}")
-                
+                time.sleep(1 + random.randint(0,3))
                 if MSG.data== "token":
                     self.set_token()
 
@@ -57,6 +56,7 @@ class Device: ### represents a device in the network
 
             elif MSG.receiver == "all":
                 print(f"{MSG.receiver} received a message with id {MSG.id()} from {MSG.sender}")
+                time.sleep(1 + random.randint(0,3))
                 if MSG.data == "election":
                     self.election(MSG.sender)
 
@@ -66,6 +66,7 @@ class Device: ### represents a device in the network
     def election(self, sender_id):
         if sender_id < self.id:
             self.publish("election_answer", receiver = sender_id)
+            time.sleep(1 + random.randint(0,3))
             self.publish("election", receiver = "all")
         else:
             self.leader_id = sender_id
@@ -86,3 +87,14 @@ class Device: ### represents a device in the network
         self.has_token = True
         self.use_resource()
         self.pass_token()
+
+
+if __name__ == "__main__":
+    id = input()
+    device = Device(id)
+    
+    if device.id == "0":
+        device.set_token()
+        device.publish("election", receiver = "all")
+    
+    device.client.loop_forever()
