@@ -34,9 +34,9 @@ class Device: ### represents a device in the network
 
         if status == 0:
             if msg.receiver == "all":
-                print(f"{msg.sender} broadcasted message to all devices with timestamp {msg.timestamp}", file = sys.stderr)
+                print(f"Device {msg.sender} broadcasted message to all devices with timestamp {msg.timestamp}", file = sys.stderr)
             else:
-                print(f"{msg.sender} sent message to device {msg.receiver} with timestamp {msg.timestamp}", file = sys.stderr)
+                print(f"Device {msg.sender} sent message to device {msg.receiver} with timestamp {msg.timestamp}", file = sys.stderr)
         else:
             print(f"Failed to send message to device {msg.receiver}", file = sys.stderr)
             
@@ -47,8 +47,8 @@ class Device: ### represents a device in the network
             if MSG.receiver == str(self.id):
                 MSG.receiver = int(MSG.receiver)
                 self.timestamp = max(self.timestamp, MSG.timestamp+1)
-                print(f"{MSG.receiver} received a message from {MSG.sender}", file = sys.stderr)
-                print(f"{self.id} timestamp is {self.timestamp}", file = sys.stderr)
+                print(f"Device {MSG.receiver} received a message from {MSG.sender}", file = sys.stderr)
+                print(f"Device {self.id} timestamp is {self.timestamp}", file = sys.stderr)
                 time.sleep(1 + random.randint(0,3))
                 if MSG.data== "token":
                     self.set_token()
@@ -59,8 +59,8 @@ class Device: ### represents a device in the network
 
             elif MSG.receiver == "all" and MSG.sender != self.id:
                 self.timestamp = max(self.timestamp, MSG.timestamp+1)
-                print(f"{self.id} received a message from {MSG.sender}", file = sys.stderr)
-                print(f"{self.id} timestamp is {self.timestamp}", file = sys.stderr)
+                print(f"Device {self.id} received a message from {MSG.sender}", file = sys.stderr)
+                print(f"Device {self.id} timestamp is {self.timestamp}", file = sys.stderr)
                 time.sleep(1 + random.randint(0,3))
                 if MSG.data == "election":
                     self.election(MSG.sender)
