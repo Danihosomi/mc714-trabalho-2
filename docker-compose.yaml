@@ -10,17 +10,17 @@ services:
     environment:
       - ID=1
 
-  # device_2:
-  #   image: mc714-t2
-  #   environment:
-  #     - ID=2
+  device_2:
+    image: mc714-t2
+    environment:
+      - ID=2
 
-  # device_3:
-  #   image: mc714-t2
-  #   environment:
-  #     - ID=3
+  device_3:
+    image: mc714-t2
+    environment:
+      - ID=3
 
-  # device_4:
-  #   image: mc714-t2
-  #   environment:
-  #     - ID=4
+  device_4:
+    image: mc714-t2
+    environment:
+      - ID=4

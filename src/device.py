@@ -54,6 +54,7 @@ class Device: ### represents a device in the network
                     self.set_token()
 
                 elif MSG.data == "election_answer":
+                    print(f"Device {MSG.sender} is the new leader of the {self.id} device", file = sys.stderr)
                     self.leader_id = max(MSG.sender, self.leader_id)
 
             elif MSG.receiver == "all" and MSG.sender != self.id:
@@ -87,7 +88,8 @@ class Device: ### represents a device in the network
 
     def pass_token(self):
         self.has_token = False
-        self.publish("token", receiver = (self.id + 1) % 2)
+        print(f"Device {self.id} has no longer the token", file = sys.stderr)
+        self.publish("token", receiver = (self.id + 1) % 5)
 
     def set_token(self):
         self.has_token = True
@@ -97,11 +99,15 @@ class Device: ### represents a device in the network
 
 def run(device):
     if device.id == 0:
-        device.set_token()
         device.publish("election", receiver = "all")
+
+        time.sleep(40)
+
+        device.set_token()
+        
     
     device.publish("hello", receiver = "all")
-    device.publish("hello you", receiver = (device.id + 1) % 2)
+    device.publish("hello you", receiver = (device.id + 1) % 5)
 
     device.client.loop_forever()
 
