@@ -92,6 +92,11 @@ A implementação poderia ser melhorada utilizando bibliotecas de comunicação 
 **Aprendizados:**
 Este projeto proporcionou uma compreensão profunda dos desafios e técnicas envolvidas na implementação de algoritmos distribuídos. Aprendemos sobre a importância da sincronização de tempo, a coordenação de processos e a tolerância a falhas em sistemas distribuídos. Além de aprender bastante sobre comunicação entre computadores e redes de computadores.
 
+# Execução do Repositório 
+Para a execuação e simulação do código em sua máquina é necessário possuir o Python na versão 3.7 ou acima e o Docker Desktop e rodar os seguintes comandos:
+
+- docker build . -t "mc714-t2"
+- docker compose up
 
 # Vídeo do Projeto
 
