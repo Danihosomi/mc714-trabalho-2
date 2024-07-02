@@ -21,13 +21,13 @@ O principal objetivo do projeto é desenvolver uma solução que implemente efic
 ## Algoritmos Escolhidos
 
 **Relógio Lógico de Lamport:**
-Este algoritmo é utilizado para ordenar eventos em sistemas distribuídos onde não existe um relógio global. Ele garante que se um evento A causou um evento B, então A será ordenado antes de B.
+Este algoritmo é utilizado para ordenar eventos em sistemas distribuídos onde não existe um relógio global. Ele garante que se um evento A causou um evento B, então A será ordenado antes de B. Isso garante sincronização entre diferentes máquinas e processos durante o envio de mensagens.
 
 **Token Ring:**
-A exclusão mútua é necessária para evitar conflitos de acesso concorrente a recursos compartilhados. Implementamos um algoritmo de exclusão mútua para garantir que apenas um processo possa acessar o recurso crítico por vez.
+A exclusão mútua é necessária para evitar conflitos de acesso concorrente a recursos compartilhados. Implementamos o algoritmo token ring de exclusão mútua para garantir que apenas um processo possa acessar o recurso crítico por vez. Nesse algoritmo cada processo possuí uma variável informando 
 
-**Leader Election:**
-A eleição de líder é crucial em sistemas distribuídos para coordenar ações e tomar decisões. Implementamos um algoritmo de eleição de líder que escolhe um líder entre os processos distribuídos, que será responsável por coordenar as operações.
+**Bully Algorithm for Leader Election:**
+A eleição de líder é crucial em sistemas distribuídos para coordenar ações e tomar decisões. Implementamos o algoritmo bully de eleição de líder que escolhe um líder entre os processos distribuídos, que será responsável por coordenar as operações. O líder escolhido é a partir da prioridade dos processos e dos computadores, que é definida quando subimos eles nas redes distribuídas.
 
 ---
 
@@ -35,12 +35,12 @@ A eleição de líder é crucial em sistemas distribuídos para coordenar açõe
 
 **Bibliotecas Utilizadas:**
 - Python: Utilizado como linguagem de programação principal.
-- `socket`: Biblioteca para comunicação via rede.
-- `threading`: Utilizada para implementar a concorrência no código.
-- `pickle`: Usada para serialização de mensagens para comunicação entre processos.
+- Paho-MQTT: Biblioteca utilizada para conexão e comunicação em redes de computadores.
+- Docker: Para virtualização e simulação de várias máquinas em contribuição.
+
 
 **Sistemas de Comunicação:**
-Utilizamos comunicação baseada em troca de mensagens utilizando sockets TCP para garantir a entrega confiável de mensagens entre os processos.
+Utilizamos comunicação baseada em troca de mensagens pelo paho-mqtt usando o broker message mosquitto para garantir a entrega confiável de mensagens entre os processos.
 
 **Ambiente de Execução:**
 O código foi executado em um ambiente de contêineres Docker para simular um sistema distribuído. Cada contêiner representa um nó no sistema distribuído.
@@ -51,26 +51,23 @@ O código foi executado em um ambiente de contêineres Docker para simular um si
   Este arquivo contém a definição da classe `Device`, que representa um nó no sistema distribuído. Ele inclui métodos para inicializar o dispositivo, enviar e receber mensagens, e processar eventos de acordo com o Relógio Lógico de Lamport.
 
 - **message.py:**
-  Define a estrutura das mensagens trocadas entre os dispositivos. Cada mensagem inclui informações como tipo, timestamp, e payload.
+  Define a estrutura das mensagens trocadas entre os dispositivos. Cada mensagem inclui informações como data, timestamp, remetente, e destinatário.
 
 - **util.py:**
-  Contém funções utilitárias para suporte à comunicação e manipulação de mensagens.
+  Contém constantes utilitárias para suporte à comunicação e manipulação de mensagens.
 
 ---
 
 ## Testes Realizados
 
 **Estratégia de Testes:**
-Os testes foram realizados em um ambiente simulado utilizando múltiplos contêineres Docker. Cada contêiner executa uma instância do código do dispositivo, permitindo a comunicação entre os nós e a validação dos algoritmos.
+Os testes foram realizados em um ambiente simulado utilizando múltiplos contêineres Docker. Cada contêiner executa uma instância do código do dispositivo, permitindo a comunicação entre os nós e a validação dos algoritmos. Todos os algoritmos são executados de maneira simultânea.
 
 **Resultados dos Testes:**
 Os algoritmos foram validados com sucesso através de uma série de testes. Cada algoritmo demonstrou o comportamento esperado:
 - O Relógio Lógico de Lamport ordenou corretamente os eventos distribuídos.
-- O algoritmo de exclusão mútua garantiu acesso exclusivo ao recurso crítico.
-- O algoritmo de eleição de líder selecionou corretamente um líder entre os nós distribuídos.
-
-**Problemas Encontrados:**
-Foram encontrados problemas com a sincronização inicial dos relógios lógicos e a configuração da rede Docker para permitir a comunicação entre contêineres. Esses problemas foram resolvidos ajustando os parâmetros de rede e utilizando barreiras de sincronização.
+- O algoritmo token ring de exclusão mútua garantiu acesso exclusivo ao recurso crítico.
+- O algoritmo bully de eleição de líder selecionou corretamente um líder entre os nós distribuídos.
 
 ---
 
@@ -93,7 +90,7 @@ As principais dificuldades incluíram a configuração do ambiente de contêiner
 A implementação poderia ser melhorada utilizando bibliotecas de comunicação mais avançadas, como gRPC, para simplificar a comunicação entre os nós. Além disso, a automação dos testes e a criação de um sistema de monitoramento para os nós distribuídos seriam benéficas.
 
 **Aprendizados:**
-Este projeto proporcionou uma compreensão profunda dos desafios e técnicas envolvidas na implementação de algoritmos distribuídos. Aprendemos sobre a importância da sincronização de tempo, a coordenação de processos e a tolerância a falhas em sistemas distribuídos.
+Este projeto proporcionou uma compreensão profunda dos desafios e técnicas envolvidas na implementação de algoritmos distribuídos. Aprendemos sobre a importância da sincronização de tempo, a coordenação de processos e a tolerância a falhas em sistemas distribuídos. Além de aprender bastante sobre comunicação entre computadores e redes de computadores.
 
 
 # Vídeo do Projeto
